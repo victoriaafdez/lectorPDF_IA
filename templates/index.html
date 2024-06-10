@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .drop-zone {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            color: #888;
+        }
+        .drop-zone.dragover {
+            border-color: #333;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="static/logo.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#assistant">Asistente</a></li>
+                <li><a href="#info">Información</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="home">
+            <h1>Bienvenido a Nuestro Lector de PDF Inteligente</h1>
+            <p>Sube un PDF y haz una pregunta para obtener respuestas precisas y rápidas gracias a nuestra IA avanzada.</p>
+            <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select a PDF file:</label>
+                    <div class="drop-zone" id="drop-zone">Arrastra y suelta tu PDF aquí o haz clic para seleccionarlo</div>
+                    <input type="file" id="file" name="file" accept="application/pdf" style="position: absolute; left: -9999px;" required>
+                </div>
+                <div class="form-group">
+                    <label for="question">Enter your question:</label>
+                    <input type="text" id="question" name="question" placeholder="Escribe aquí tu consulta" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Upload and Ask" class="btn">
+                </div>
+            </form>
+        </section>
+        <section id="assistant">
+            <h2>Asistente</h2>
+            <div class="assistant-container">
+                <div class="chat-box">
+                    <div class="chat-log">
+                        <!-- Aquí se mostrarán los mensajes del asistente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="info">
+            <h2>Información</h2>
+            <p>¿Cansado de buscar manualmente la información en interminables documentos PDF? ¡Tenemos la solución perfecta para ti! Nuestro lector de PDF impulsado por inteligencia artificial está aquí para facilitarte la vida.</p>
+            <h3>¿Qué Hace Nuestro Lector de PDF?</h3>
+            <p>Nuestro lector de PDF con IA te permite subir cualquier documento PDF y hacer preguntas específicas sobre su contenido. La IA analizará el documento y te proporcionará respuestas precisas y rápidas. Es como tener un asistente personal que lee por ti y encuentra justo lo que necesitas.</p>
+            <h3>¿Cómo Funciona?</h3>
+            <ul>
+                <li><strong>Sube tu PDF:</strong> Simplemente selecciona el archivo PDF que deseas analizar. No importa si es un informe largo, un manual técnico o un libro electrónico.</li>
+                <li><strong>Haz tu Pregunta:</strong> Una vez que el PDF esté cargado, escribe tu pregunta en el campo de texto. ¿Buscas una cita específica, un dato importante o una explicación? Pregúntaselo a nuestro asistente.</li>
+                <li><strong>Obtén Respuestas Rápidas:</strong> Nuestra IA se encargará del resto. En unos pocos segundos, tendrás la respuesta que necesitas directamente en tu pantalla.</li>
+            </ul>
+            <h3>¿Por Qué Usar Nuestro Lector de PDF?</h3>
+            <ul>
+                <li><strong>Ahorra Tiempo:</strong> Olvídate de pasar horas buscando en cada página. Nuestra IA lo hace en segundos.</li>
+                <li><strong>Precisión:</strong> Obtén respuestas exactas y confiables basadas en el contenido de tu PDF.</li>
+                <li><strong>Fácil de Usar:</strong> Interfaz intuitiva y sencilla, diseñada para todos los usuarios, sin importar su nivel de habilidad técnica.</li>
+            </ul>
+            <h3>¿Listo para Probar?</h3>
+            <p>Sube tu primer PDF y descubre lo fácil que puede ser encontrar información relevante. Ya sea para tus estudios, trabajo o simple curiosidad, nuestro lector de PDF con IA está aquí para ayudarte.</p>
+        </section>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file');
+            const uploadForm = document.getElementById('upload-form');
+
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length) {
+                    dropZone.textContent = fileInput.files[0].name;
+                } else {
+                    dropZone.textContent = 'Arrastra y suelta tu PDF aquí o haz clic para seleccionarlo';
+                }
+            });
+
+            uploadForm.addEventListener('submit', (e) => {
+                if (!fileInput.files.length || !document.getElementById('question').value) {
+                    e.preventDefault();
+                    alert('Por favor, selecciona un archivo PDF y escribe una pregunta.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
