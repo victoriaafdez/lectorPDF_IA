@@ -18,8 +18,8 @@ def setup_llm():
     llm = HuggingFaceEndpoint(
         repo_id="bigscience/bloom",
         task="text-generation",
-        temperature=0.1,
-        max_length=2048,
+        temperature=0.3,
+        max_length=150,
         device_map="auto"
     )
     return llm
@@ -101,8 +101,16 @@ def upload():
 
 # Función para hacer una pregunta
 def ask_question(qa, query, chat_history):
+    chat_history=[] #crear una nueva historia de chat en cada llamada
     result = qa({"question": query, "chat_history": chat_history})
-    return result["answer"]
+    answer = result["answer"]
+    
+    #Manejo de la respuesta para evitar repeticiones
+    #Usar regex para eliminar patrones repetitivos
+    import re
+    cleaned_answer = re.sub(r"(Helpful Answer:.*?)+", "", answer, flags=re.DOTALL).strip()
+
+    return cleaned_answer
 
 # Función de ruta para mostrar los resultados
 @app.route('/result')
