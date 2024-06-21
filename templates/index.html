@@ -8,32 +8,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        .drop-zone {
-            border: 2px dashed #ddd;
-            border-radius: 5px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            color: #888;
-        }
-        .drop-zone.dragover {
-            border-color: #333;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-    </style>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="static/logo.png" alt="Logo">
+            <img src="static/logo_te.jpg" alt="Logo Empresa">
         </div>
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#assistant">Asistente</a></li>
                 <li><a href="#info">Información</a></li>
+                <li><a href="#contact">Contacto</a></li>
             </ul>
         </nav>
     </header>
@@ -47,12 +33,16 @@
                     <div class="drop-zone" id="drop-zone">Arrastra y suelta tu PDF aquí o haz clic para seleccionarlo</div>
                     <input type="file" id="file" name="file" accept="application/pdf" style="position: absolute; left: -9999px;" required>
                 </div>
-                <div class="form-group">
-                    <label for="question">Enter your question:</label>
-                    <input type="text" id="question" name="question" placeholder="Escribe aquí tu consulta" required>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Upload and Ask" class="btn">
+                <div class="question-container">
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <label for="question">Haz tu pregunta:</label>
+                            <textarea id="question" name="question" class="question-box" rows="4" cols="50"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Enviar" class="btn">
+                        </div>
+                    </form>
                 </div>
             </form>
         </section>
@@ -85,6 +75,10 @@
             </ul>
             <h3>¿Listo para Probar?</h3>
             <p>Sube tu primer PDF y descubre lo fácil que puede ser encontrar información relevante. Ya sea para tus estudios, trabajo o simple curiosidad, nuestro lector de PDF con IA está aquí para ayudarte.</p>
+        </section>
+        <section id="contact">
+            <h2>Contacto</h2>
+            <p>Para mas informacion, llámanos al <strong>900925592</strong></p>
         </section>
     </div>
     <script>

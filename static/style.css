@@ -1,3 +1,4 @@
+/* Cambiar la fuente de texto */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
@@ -6,18 +7,23 @@ body {
     padding: 0;
 }
 
+/* Estilos para los titulares con degradado de color azul */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    background: linear-gradient(90deg, #004080, #00aaff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Menú de navegación */
 header {
-    background: #d32f2f;
+    background: #fff; /* Fondo blanco */
     color: #fff;
     padding: 10px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-header .logo img {
-    height: 50px;
-    margin-left: 20px;
 }
 
 header nav ul {
@@ -29,51 +35,82 @@ header nav ul {
 
 header nav ul li {
     margin: 0 10px;
+    position: relative;
 }
 
 header nav ul li a {
-    color: #fff;
+    color: #fff; /* Color de la letra blanca */
     text-decoration: none;
     font-weight: 700;
+    padding: 10px 20px;
+    background-color: #e60000; /* Fondo rojo más claro para el círculo */
+    border-radius: 20px; /* Hacerlo ovalado */
+    display: inline-block;
+    text-align: center;
+    transition: all 0.3s ease; /* Añadido para la transición suave */
 }
 
 header nav ul li a:hover {
-    text-decoration: underline;
+    color: #e60000; /* Color de la letra rojo más claro */
+    background-color: #fff; /* Fondo blanco */
+    border: 2px solid #e60000; /* Borde rojo más claro */
+    text-decoration: none;
 }
 
+/* Submenú */
+header nav ul li ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #004080;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    z-index: 1000;
+}
+
+header nav ul li:hover ul {
+    display: block;
+}
+
+header nav ul li ul li {
+    width: 200px;
+}
+
+header nav ul li ul li a {
+    padding: 10px;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+
+header nav ul li ul li a:hover {
+    background: #003366;
+}
+
+/* Ajuste del tamaño del logo */
+header .logo img {
+    max-width: 150px; /* Puedes ajustar este valor según necesites */
+    height: auto; /* Mantiene la proporción del logo */
+}
+
+/* Contenedor principal */
 .container {
     width: 80%;
     margin: auto;
     overflow: hidden;
     padding-top: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
 }
 
-section {
-    margin: 20px 0;
-}
-
-form .form-group {
-    margin-bottom: 15px;
-}
-
-form .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 700;
-}
-
-form .form-group input[type="file"],
-form .form-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
+/* Botones */
 form .form-group input[type="submit"].btn {
     display: inline-block;
-    background: #d32f2f;
+    background: #004080;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -85,27 +122,114 @@ form .form-group input[type="submit"].btn {
 }
 
 form .form-group input[type="submit"].btn:hover {
-    background: #b71c1c;
+    background: #003366;
 }
 
-.assistant-container {
-    display: flex;
-    justify-content: center;
-}
-
-.chat-box {
-    width: 80%;
-    max-width: 800px;
-    background: #fff;
-    border: 1px solid #ddd;
+/* Estilos adicionales */
+.drop-zone {
+    border: 2px dashed #ccc;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #888;
+    margin-bottom: 10px;
 }
 
-.chat-log {
-    height: 300px;
-    overflow-y: auto;
-    border-bottom: 1px solid #ddd;
+.drop-zone.dragover {
+    border-color: #004080;
+    background-color: #f4f4f4;
+    color: #004080;
+}
+
+/* Estilo para la ruta de navegación (breadcrumb) */
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
+    background-color: #e9ecef;
+    border-radius: 0.375rem;
+}
+
+.breadcrumb-item {
+    display: flex;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    display: inline-block;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    color: #6c757d;
+    content: "/";
+}
+
+.breadcrumb-item > a {
+    color: #004080; /* Color del enlace */
+    text-decoration: none;
+}
+
+.breadcrumb-item > a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+/* Contenedor de la pregunta */
+.question-container {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para la etiqueta del campo de pregunta */
+.question-container label {
+    display: block;
     margin-bottom: 10px;
+    font-size: 18px;
+    color: #004080;
+    font-weight: 700;
+}
+
+/* Estilo para el área de texto de la pregunta */
+.question-container .question-box {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    transition: border-color 0.3s ease;
+}
+
+/* Cambio de borde al enfocar */
+.question-container .question-box:focus {
+    border-color: #004080;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 64, 128, 0.5);
+}
+
+/* Estilo para el botón de enviar */
+.question-container .btn {
+    display: inline-block;
+    background: #004080;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-transform: uppercase;
+    transition: background 0.3s ease;
+}
+
+.question-container .btn:hover {
+    background: #003366;
 }

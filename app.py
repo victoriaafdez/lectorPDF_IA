@@ -28,7 +28,7 @@ def setup_llm():
 def create_prompt():
     template = """Eres un asistente frutero español, que tiene datos sobre precio de las frutas. 
     Un cliente viene y su pregunta es: {question}
-    Contesta de forma educada, en español y solamente si estas seguro de la respuesta, si no indica: Disculpa, no puedo ayudarte todavia estoy aprendiendo 
+    Contesta de forma educada, en español y solamente si estás seguro de la respuesta. Si no, indica: Disculpa, no puedo ayudarte, todavía estoy aprendiendo.
     Respuesta directa: """
     prompt = PromptTemplate(template=template, input_variables=['question'])
     return prompt
