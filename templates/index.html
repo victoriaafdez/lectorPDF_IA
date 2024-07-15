@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload PDF</title>
+    <title>Lector PDF Inteligente</title>
     <link rel="stylesheet" href="static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/png" href="static/logo_te.jpg">
 </head>
 <body>
     <header>
@@ -17,113 +19,299 @@
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
-                <li><a href="#assistant">Asistente</a></li>
-                <li><a href="#info">Información</a></li>
-                <li><a href="#contact">Contacto</a></li>
+                <li><a href="#about">Nosotros</a></li>
+                <li><a href="#faq">Preguntas frecuentes</a></li>
+                <li><a href="#comentarios">Comentarios</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
     </header>
     <div class="container">
         <section id="home">
-            <h1>Bienvenido a Nuestro Lector de PDF Inteligente</h1>
-            <p>Sube un PDF y haz una pregunta para obtener respuestas precisas y rápidas gracias a nuestra IA avanzada.</p>
-            <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="file">Select a PDF file:</label>
-                    <div class="drop-zone" id="drop-zone">Arrastra y suelta tu PDF aquí o haz clic para seleccionarlo</div>
-                    <input type="file" id="file" name="file" accept="application/pdf" style="position: absolute; left: -9999px;" required>
-                </div>
-                <div class="question-container">
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <label for="question">Haz tu pregunta:</label>
-                            <textarea id="question" name="question" class="question-box" rows="4" cols="50"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Enviar" class="btn">
-                        </div>
+            <h1>Conversa con Facilita: Tu Asistente Virtual al Instante</h1>
+            <h2>Chatea ahora y resuelve tus dudas al momento</h2>
+            <div class="main-content">
+                <div class="chat-container">
+                    <div class="chat-box" id="chat-box">
+                        <ul class="chat-log" id="chat-log">
+                            <!-- Aquí se mostrarán los mensajes del asistente -->
+                        </ul>
+                    </div>
+                    <form id="chat-form" action="/get-answer" method="post" class="input-container">
+                        <textarea id="question" name="question" class="question-box" placeholder="Escribe tu pregunta aquí..." required></textarea>
+                        <button type="submit" class="btn-send" id="send-button"><i class="fa fa-paper-plane"></i></button>
                     </form>
+                </div>
+            </div>
+            <div class="error-message" id="error-message" style="display:none;">
+                <p id="error-text"></p>
+            </div>
+            {% if answer %}
+            <div class="answer-container">
+                <h2>Respuesta:</h2>
+                <p>{{ answer }}</p>
+            </div>
+            {% endif %}
+            {% if error_message %}
+            <div class="error-message">
+                <p>{{ error_message }}</p>
+            </div>
+            {% endif %}
+        </section>
+        <section id="about">
+            <h2>Facilita: Simplifica tus imprevistos</h2>
+            <p>El servicio <a href="https://www.totalenergies.es/es/hogares/mantenimiento-de-instalaciones?utm_source=google&utm_medium=cpc&utm_campaign=S_B_F&utm_term=facilita%20totalenergies&gad_source=1&gclid=Cj0KCQjwhb60BhClARIsABGGtw9VfjeABwQVYvjlMgAo6uqf0bF5JAPg3Xr55zjJ6MxRjYhgcFhcM_AaAtGXEALw_wcB" class="link-red">Facilita</a> de TotalEnergies es una propuesta para quienes buscan
+                contar con una asistencia técnica de primera.
+            </p>
+            <h3>¿Qué incluye el servicio Facilita?</h3>
+            <ul>
+                <li>Mantenimiento preventivo</li>
+                <li>Tarifas adaptadas</li>
+                <li>Asistencia técnica</li>
+                <li>Cobertura amplia</li>
+                <li>Promociones y planes especiales</li>
+            </ul>
+            <h3>¿Cuáles son nuestros planes?</h3>
+            <ul>
+                <li>Facilita Luz</li>
+                <li>Facilita Luz y Gas</li>
+                <li>Facilita Plus</li>
+            </ul>
+            <section id="faq">
+                <h2>Preguntas Frecuentes</h2>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        <h3>¿Cómo puedo utilizar el chat?</h3>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Escribe tu pregunta o consulta en el campo de texto y presiona el botón enviar.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        <h3>¿Qué tipo de preguntas puedo hacer?</h3>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Puedes preguntar sobre los electrodomésticos incluidos en las coberturas, coste de las repaciones, etc. </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleAnswer(this)">
+                        <h3>¿El servicio es gratuito?</h3>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, el uso de nuestro asistente virtual es completamente gratuito.</p>
+                    </div>
+                </div>
+            </section>
+
+        </section>
+        <section id="comentarios">
+            <h2>Comentarios</h2>
+            <form id="comment-form">
+                <div class="form-group">
+                    <label for="user-comment">Deja tu comentario:</label>
+                    <textarea id="user-comment" name="user-comment" class="comment-box" placeholder="Escribe tu comentario aquí..." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <div class="rating">
+                        <h3>Tu puntuación:</h3>
+                        <div class="stars">
+                            <i class="fa fa-star" data-value="1"></i>
+                            <i class="fa fa-star" data-value="2"></i>
+                            <i class="fa fa-star" data-value="3"></i>
+                            <i class="fa fa-star" data-value="4"></i>
+                            <i class="fa fa-star" data-value="5"></i>
+                        </div>
+                        <p id="rating-value">0</p>
+                    </div>
+                    <button type="submit" class="btn-send" id="comment-button">Enviar</button>
                 </div>
             </form>
         </section>
-        <section id="assistant">
-            <h2>Asistente</h2>
-            <div class="assistant-container">
-                <div class="chat-box">
-                    <div class="chat-log">
-                        <!-- Aquí se mostrarán los mensajes del asistente -->
+           
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section logo-section">
+                <img src="static/logo_te.jpg" alt="Logo Empresa">
+            </div>
+            <div class="footer-section">
+                <h3>TotalEnergies en España</h3>
+                <ul>
+                    <li><a href="https://www.totalenergies.es/es/quienes-somos">Quiénes somos</a></li>
+                    <li><a href="https://www.totalenergies.es/es/nuestro-compromiso">Nuestro compromiso</a></li>
+                    <li><a href="https://www.totalenergies.es/es/talento">Talento</a></li>
+                    <li><a href="https://www.totalenergies.es/es/nuestra-actualidad">Nuestra actualidad</a></li>
+                    <li><a href="https://www.totalenergies.es/es/proveedores">Proveedores</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Servicios</h3>
+                <ul>
+                    <li><a href="#">Mantenimiento</a></li>
+                    <li><a href="#">Facilita luz</a></li>
+                    <li><a href="#">Facilita plus</a></li>
+                    <li><a href="#">Calefacción</a></li>
+                    <li><a href="#">Climatización</a></li>
+                </ul>
+            </div>
+            <div class="footer-section" id="contacto">
+                <h3>Te ayudamos</h3>
+                <ul>
+                    <li><a href="#">Qué necesitas</a></li>
+                    <li><a href="#">Preguntas frecuentes</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:900907000">900 907 000</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:atcliente@totalenergies.com">Escríbenos</a>
                     </div>
                 </div>
             </div>
-        </section>
-        <section id="info">
-            <h2>Información</h2>
-            <p>¿Cansado de buscar manualmente la información en interminables documentos PDF? ¡Tenemos la solución perfecta para ti! Nuestro lector de PDF impulsado por inteligencia artificial está aquí para facilitarte la vida.</p>
-            <h3>¿Qué Hace Nuestro Lector de PDF?</h3>
-            <p>Nuestro lector de PDF con IA te permite subir cualquier documento PDF y hacer preguntas específicas sobre su contenido. La IA analizará el documento y te proporcionará respuestas precisas y rápidas. Es como tener un asistente personal que lee por ti y encuentra justo lo que necesitas.</p>
-            <h3>¿Cómo Funciona?</h3>
-            <ul>
-                <li><strong>Sube tu PDF:</strong> Simplemente selecciona el archivo PDF que deseas analizar. No importa si es un informe largo, un manual técnico o un libro electrónico.</li>
-                <li><strong>Haz tu Pregunta:</strong> Una vez que el PDF esté cargado, escribe tu pregunta en el campo de texto. ¿Buscas una cita específica, un dato importante o una explicación? Pregúntaselo a nuestro asistente.</li>
-                <li><strong>Obtén Respuestas Rápidas:</strong> Nuestra IA se encargará del resto. En unos pocos segundos, tendrás la respuesta que necesitas directamente en tu pantalla.</li>
-            </ul>
-            <h3>¿Por Qué Usar Nuestro Lector de PDF?</h3>
-            <ul>
-                <li><strong>Ahorra Tiempo:</strong> Olvídate de pasar horas buscando en cada página. Nuestra IA lo hace en segundos.</li>
-                <li><strong>Precisión:</strong> Obtén respuestas exactas y confiables basadas en el contenido de tu PDF.</li>
-                <li><strong>Fácil de Usar:</strong> Interfaz intuitiva y sencilla, diseñada para todos los usuarios, sin importar su nivel de habilidad técnica.</li>
-            </ul>
-            <h3>¿Listo para Probar?</h3>
-            <p>Sube tu primer PDF y descubre lo fácil que puede ser encontrar información relevante. Ya sea para tus estudios, trabajo o simple curiosidad, nuestro lector de PDF con IA está aquí para ayudarte.</p>
-        </section>
-        <section id="contact">
-            <h2>Contacto</h2>
-            <p>Para mas informacion, llámanos al <strong>900925592</strong></p>
-        </section>
-    </div>
+            <div class="footer-section">
+                <h3>Blog</h3>
+                <p>TotalEnergies Plaza de los Ferroviarios, 1. 33012 Oviedo</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; TotalEnergies. Todos los derechos reservados.</p>
+        </div>
+    </footer>
     <script>
+
+        function toggleAnswer(element) {
+            const answer = element.nextElementSibling;
+            if (answer.style.display === "block") {
+                    answer.style.display = "none";
+                    element.classList.remove("active");
+            } else {
+                    answer.style.display = "block";
+                    element.classList.add("active");
+                }
+            }
         document.addEventListener('DOMContentLoaded', (event) => {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file');
-            const uploadForm = document.getElementById('upload-form');
-
-            dropZone.addEventListener('click', () => {
-                fileInput.click();
-            });
-
-            dropZone.addEventListener('dragover', (e) => {
+            const chatLog = document.getElementById('chat-log');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const sendButton = document.getElementById('send-button');
+            const questionInput = document.getElementById('question');
+            
+            //Añadir mensaje inicial
+            const initialMessage = document.createElement('li');
+            initialMessage.classList.add('model-message');
+            initialMessage.textContent = 'Hola! Soy tu asistente virtual de Facilita. ¿En qué puedo ayudarte hoy?';
+            chatLog.appendChild(initialMessage);
+            
+            
+            sendButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                dropZone.classList.add('dragover');
+    
+                const question = questionInput.value;
+    
+    
+                if (!question) {
+                    errorMessage.style.display = 'block';
+                    errorText.textContent = 'Por favor, completa todos los campos.';
+                    return;
+                }
+    
+                errorMessage.style.display = 'none';
+    
+                const userMessage = document.createElement('li');
+                userMessage.classList.add('user-message');
+                userMessage.textContent = question;
+                chatLog.appendChild(userMessage);
+                scrollToBottom();
+    
+                const formData = new FormData();
+                formData.append('question', question);
+            
+    
+                fetch('/get-answer', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.answer) {
+                        const modelMessage = document.createElement('li');
+                        modelMessage.classList.add('model-message');
+                        modelMessage.textContent = data.answer;
+                        chatLog.appendChild(modelMessage);
+                        scrollToBottom();
+                    } else if (data.error) {
+                        errorMessage.style.display = 'block';
+                        errorText.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.style.display = 'block';
+                    errorText.textContent = 'Error al obtener la respuesta.';
+                });
             });
 
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
+            function scrollToBottom() {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            // Código para el manejo de la puntuación con estrellas
+            const stars = document.querySelectorAll('.stars i');
+            const ratingValue = document.getElementById('rating-value');
+
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    ratingValue.textContent = value;
+                    stars.forEach((s, i) => {
+                        if (i < value) {
+                            s.classList.add('selected');
+                        } else {
+                            s.classList.remove('selected');
+                        }
+                    });
+                });
             });
 
-            dropZone.addEventListener('drop', (e) => {
+            stars.forEach((star) => {
+                star.addEventListener('mouseenter', () => {
+                    resetStars();
+                    const value = parseInt(star.getAttribute('data-value'));
+                    stars.forEach((s, i) => {
+                        if (i < value) {
+                            s.classList.add('hovered');
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseleave', () => {
+                    stars.forEach((s) => {
+                        s.classList.remove('hovered');
+                    });
+                });
+            });
+
+            function resetStars() {
+                stars.forEach((s) => {
+                    s.classList.remove('selected');
+                });
+            }
+
+            const commentForm = document.getElementById('comment-form');
+            const commentButton = document.getElementById('comment-button');
+            commentForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                dropZone.classList.remove('dragover');
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    const event = new Event('change');
-                    fileInput.dispatchEvent(event);
-                }
+                commentButton.innerHTML = 'Enviado <i class="fa fa-check"></i>';
+                commentButton.disabled = true;
             });
 
-            fileInput.addEventListener('change', () => {
-                if (fileInput.files.length) {
-                    dropZone.textContent = fileInput.files[0].name;
-                } else {
-                    dropZone.textContent = 'Arrastra y suelta tu PDF aquí o haz clic para seleccionarlo';
-                }
-            });
-
-            uploadForm.addEventListener('submit', (e) => {
-                if (!fileInput.files.length || !document.getElementById('question').value) {
-                    e.preventDefault();
-                    alert('Por favor, selecciona un archivo PDF y escribe una pregunta.');
-                }
-            });
         });
     </script>
 </body>

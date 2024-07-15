@@ -1,19 +1,36 @@
-/* Cambiar la fuente de texto */
+/* Estilos generales */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     background-color: #f4f4f4;
     color: #333;
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Evita scrolling horizontal */
 }
 
 /* Estilos para los titulares con degradado de color azul */
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans-serif;
+h1, h2 {
+    font-family: 'Open Sans', sans-serif;
     font-weight: 700;
     background: linear-gradient(90deg, #004080, #00aaff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+}
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2em; /* Ajusta el tamaño según sea necesario */
+}
+
+h3, h4, h5, h6 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    color: #515151; /* Tono de gris especificado */
 }
 
 /* Menú de navegación */
@@ -24,6 +41,9 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 2px solid #ddd; /* Línea de separación */
+    width: 100%; /* Asegura que el header ocupa todo el ancho */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
 header nav ul {
@@ -31,6 +51,7 @@ header nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten al ancho */
 }
 
 header nav ul li {
@@ -91,41 +112,117 @@ header nav ul li ul li a:hover {
 
 /* Ajuste del tamaño del logo */
 header .logo img {
-    max-width: 150px; /* Puedes ajustar este valor según necesites */
+    max-width: 250px; /* Puedes ajustar este valor según necesites */
     height: auto; /* Mantiene la proporción del logo */
 }
 
 /* Contenedor principal */
 .container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
-    padding-top: 30px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
     padding: 20px;
-    border-radius: 10px;
+    background-color: #fff;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-/* Botones */
-form .form-group input[type="submit"].btn {
-    display: inline-block;
-    background: #004080;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+/* Flexbox para el contenido principal */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+/* Asegúrate de agregar estas reglas CSS */
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 60vh; /* Ajusta según sea necesario */
+    width: 100%; /* Ajusta el ancho del contenedor del chat */
+    max-width: 1200px; /* Limitar el ancho máximo */
+    margin: 0 auto;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    text-transform: uppercase;
-    transition: background 0.3s ease;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-form .form-group input[type="submit"].btn:hover {
-    background: #003366;
+.input-container {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    position: relative;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-/* Estilos adicionales */
+.question-box {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-right: 10px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+    resize: none; /* Deshabilita el redimensionamiento */
+    font-family: 'Open Sans', sans-serif;
+}
+
+.btn-send {
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px; /* Más redondeado */
+    cursor: pointer;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.btn-send i {
+    font-size: 16px;
+}
+
+/* Opcional: para asegurar que el chat log se desplaza automáticamente al fondo */
+.chat-log {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.chat-log li {
+    margin-bottom: 10px;
+}
+
+.user-message {
+    background-color: #e1ffc7;
+    padding: 10px;
+    border-radius: 5px;
+    align-self: flex-end;
+}
+
+.model-message {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    align-self: flex-start;
+}
+
+.form-group {
+    margin-top: 10px;
+}
+
 .drop-zone {
     border: 2px dashed #ccc;
     border-radius: 5px;
@@ -134,6 +231,7 @@ form .form-group input[type="submit"].btn:hover {
     cursor: pointer;
     color: #888;
     margin-bottom: 10px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
 .drop-zone.dragover {
@@ -142,94 +240,260 @@ form .form-group input[type="submit"].btn:hover {
     color: #004080;
 }
 
-/* Estilo para la ruta de navegación (breadcrumb) */
-.breadcrumb {
+/* Estilos para el pie de página */
+footer {
+    background: #fff;
+    padding: 40px 0;
+    color: #333;
+    border-top: 2px solid #ddd;
+    width: 100%; /* Asegura que el footer ocupa todo el ancho */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.footer-content {
     display: flex;
-    flex-wrap: wrap;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.footer-section {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.footer-section.logo-section {
+    flex: 0 0 150px; /* Ajustar el tamaño de la sección del logo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.footer-section.logo-section img {
+    max-width: 100%;
+    height: auto;
+    width: 150px; /* Ajustar el tamaño del logo */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.footer-section h3 {
+    margin-bottom: 20px;
+    color: #e60000; /* Color rojo para los títulos */
+}
+
+.footer-section ul {
     list-style: none;
-    background-color: #e9ecef;
-    border-radius: 0.375rem;
+    padding: 0;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-.breadcrumb-item {
-    display: flex;
+.footer-section ul li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px; /* Espacio para la flecha */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
-    display: inline-block;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-    color: #6c757d;
-    content: "/";
+.footer-section ul li::before {
+    content: '►';
+    position: absolute;
+    left: 0;
+    color: #e60000; /* Color rojo para la flecha */
 }
 
-.breadcrumb-item > a {
-    color: #004080; /* Color del enlace */
+.footer-section ul li a {
+    color: #333;
     text-decoration: none;
+    font-weight: normal;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-.breadcrumb-item > a:hover {
+.footer-section ul li a:hover {
+    color: #004080;
     text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-    color: #6c757d;
     font-weight: bold;
 }
 
-/* Contenedor de la pregunta */
-.question-container {
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.contact-item i {
+    color: #e60000;
+    font-size: 20px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.contact-item a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: normal;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.contact-item a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* Estilos para la puntuación con estrellas */
+.rating {
+    text-align: left;
+    margin-top: 20px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.stars {
+    display: flex;
+    justify-content: flex-start;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.stars i {
+    font-size: 1.5em;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.stars i.selected,
+.stars i.hovered {
+    color: #e60000;
+}
+
+#rating-value {
+    font-size: 1em;
+    margin-top: 10px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+/* FAQ Section */
+#faq {
     margin: 20px 0;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-/* Estilo para la etiqueta del campo de pregunta */
-.question-container label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #004080;
-    font-weight: 700;
+.faq-item {
+    margin-bottom: 0; /* Quitar margen inferior para que las preguntas estén más juntas */
+    border: none;
+    border-bottom: 1px solid #ddd; /* Línea de separación entre preguntas */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
 }
 
-/* Estilo para el área de texto de la pregunta */
-.question-container .question-box {
-    width: 100%;
+.faq-question {
+    background-color: #fff; /* Fondo blanco */
     padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.faq-question h3 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.faq-answer {
+    display: none;
+    padding: 10px;
+    background-color: #fff;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.faq-question::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid #e60000; /* Flecha roja */
+    border-bottom: 2px solid #e60000; /* Flecha roja */
+    transform: rotate(45deg); /* Crear flecha */
+    margin-left: 10px; /* Espacio entre el texto y la flecha */
+}
+
+.faq-question.active::after {
+    transform: rotate(-135deg); /* Girar flecha hacia arriba */
+}
+
+.link-red {
+    color: #e60000; /* Color rojo */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.link-red:hover {
+    color: #cc0000; /* Color rojo más oscuro al pasar el ratón (opcional) */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.comment-box {
+    width: 100%;
+    height: 100px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
-    resize: vertical; /* Permite redimensionar verticalmente */
-    transition: border-color 0.3s ease;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
 }
 
-/* Cambio de borde al enfocar */
-.question-container .question-box:focus {
-    border-color: #004080;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 64, 128, 0.5);
+.form-actions {
+    display: flex;
+    justify-content: space-between; /* Alinear estrellas y botón */
+    align-items: center; /* Alinear verticalmente el botón con las estrellas */
+    margin-top: 15px;
 }
 
-/* Estilo para el botón de enviar */
-.question-container .btn {
-    display: inline-block;
-    background: #004080;
-    color: #fff;
+.rating {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stars {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+#comment-button {
     border: none;
+    background-color: #4CAF50;
+    color: white;
     padding: 10px 20px;
-    font-size: 16px;
+    border-radius: 20px; /* Más redondeado */
     cursor: pointer;
-    border-radius: 5px;
-    text-transform: uppercase;
-    transition: background 0.3s ease;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+    display: inline-block;
+    transition: background-color 0.3s ease;
 }
 
-.question-container .btn:hover {
-    background: #003366;
+#comment-button:disabled {
+    background-color: #4CAF50; /* Mismo color pero deshabilitado */
+    cursor: not-allowed;
 }
