@@ -497,3 +497,50 @@ footer {
     background-color: #4CAF50; /* Mismo color pero deshabilitado */
     cursor: not-allowed;
 }
+
+/* Estilo para los botones de preguntas rápidas */
+.quick-reply {
+    border: none;
+    background-color: #004080; /* Mismo color que en los títulos */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px; /* Botones redondeados */
+    cursor: pointer;
+    margin: 5px;
+    display: inline-block;
+    font-family: 'Open Sans', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.quick-reply:hover {
+    background-color: #00aaff; /* Cambiar el color en hover */
+    color: #fff;
+}
+
+/* Estilo para el mensaje "Cargando..." */
+.loading-message {
+    color: #888; /* Un color suave para el texto */
+    display: flex;
+    align-items: center;
+    font-style: italic; /* Estilo cursiva para indicar que es temporal */
+}
+
+/* Estilo para el círculo animado */
+.loading-circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #888; /* Color suave */
+    margin-right: 8px;
+    animation: loadingAnimation 0.8s infinite ease-in-out;
+}
+
+@keyframes loadingAnimation {
+    0%, 100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 1;
+    }
+}

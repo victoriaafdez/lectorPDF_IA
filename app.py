@@ -1,11 +1,14 @@
 
 from flask import Flask, render_template, request, jsonify
 import os
+import logging
+from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 
 #openai
 from langchain_openai import ChatOpenAI
@@ -20,13 +23,33 @@ app = Flask(__name__)
 
 from langchain_core.language_models.llms import LLM
 
+
+
+quick_reply_answers = {
+    "¿Cuáles son los electrodomésticos cubiertos?": "Los electrodomésticos que cubrimos incluyen lavadoras, lavavajillas, neveras, frigoríficos, vitrocerámicas, secadoras, calderas eléctricas, termos acumuladores, hornos eléctricos (no de sobremesa) y campanas extractoras. Si tienes dudas sobre un equipo específico, ¡no dudes en consultarnos!",
+    "¿Cómo puedo solicitar una reparación?": "Solicitar una reparación es sencillo. Solo necesitas ingresar a tu área de cliente en nuestra plataforma y registrar el tipo de reparación que necesitas. Desde allí, gestionaremos todo para que uno de nuestros técnicos te contacte y programe la visita. ¡Estamos aquí para ayudarte!",
+    "¿Cuánto tiempo tarda una reparación?": "En promedio, el técnico te contactará en un plazo de 24 horas hábiles para programar la visita y resolver la avería en unos 2-3 días. Si necesitas una reparación de emergencia, te llamaremos en menos de 3 horas, para atenderte lo antes posible. ¡Nos comprometemos a darte el mejor servicio lo más rápido posible!"
+
+
+}
+
+#Cargar las variables de entorno desde .env
+load_dotenv('secret.env')
+
+#Configurar el logging
+logging.basicConfig(level = logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 def llm_openain(temperature, max_tokens)->ChatOpenAI:
-    os.environ["OPENAI_API_KEY"] = "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"
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("Falta la clave API de OpenAI en las variables de entorno.")
     return ChatOpenAI(
-        model="gpt-3.5-turbo",
-        temperature = temperature,
-        max_tokens = max_tokens,
+        model = "gpt-3.5-turbo",
+        temperature= temperature,
+        max_tokens= max_tokens,
+        openai_api_key = api_key #asigna la clave de API al cliente
     )
+    
 
 
 # Configurar el modelo LLM y Embeddings asociado a OpenAI
@@ -46,6 +69,9 @@ def setup_llm_embeddings(
     embeddings = OpenAIEmbeddings()
     
     return llm, embeddings
+
+
+llm, embeddings = setup_llm_embeddings()
     
 
 # Configurar el prompt para la cadena LLM
@@ -55,34 +81,34 @@ def create_prompt()->PromptTemplate:
     
     [Rol] 
     
-    Eres un asistente del servicio Facilita de la empresa TotalEnergies, que tiene datos sobre las reparaciones
-    y arreglos de electrodomésticos que ofrece Facilita en {context}. 
+    Eres un asistente del servicio Facilita de la empresa TotalEnergies, especializado en ayudar con
+    información sobre reparaciones y coberturas de electrodomésticos en {context}. 
     
     [Datos de entrada] 
-    
-    Un cliente viene y su pregunta es: {question}
+   
+    Un cliente pregunta: {question}
     
     [Instrucciones]
-    Da una respuesta única al cliente, de forma objetiva, educada y detallada sobre la informacion dada.
-    La respuesta debe ser en español.
-    Limitate a dar la información del servicio Facilita.
-    Únicamente si la pregunta no tiene relación con el servicio Facilita responde: "Lo siento, no puedo responderte. 
-    Si tiene cualquier pregunta sobre el servicio Facilita, no dude en preguntar."
-    Si los electrodomésticos no están incluidos o tienen características especiales debes explicarlo bien.
-    
-    Responde solo si estas seguro de la respuesta
-    Si no, la primera vez: "Disculpa, no te he entendido. ¿Puedes repetir la pregunta?
-    En caso de que repita la pregunta y sigas sin estar seguro: "Disculpa no puedo responderte, aún estoy aprendiendo."
-    
+    - Responde con una única respuesta clara, educada y detallada en español.
+    - Limitate a la información relevante sobre el servicio Facilita y sus coberturas.
+    - Si la pregunta no está relacionada con coberturas, reparaciones o servicios de electrodomésticos y Facilita,
+    responde: "Lo siento, no puedo responderte. Para cualquier consulta sobre el servicio Facilita, no dudes en preguntar."
+    - En caso de que el electrodoméstico mencionado no esté cubierto o tenga requisitos especiales, explica claramente estas restricciones.
+    - Si no tienes suficiente información, solicita confirmación del usuario antes de responder: "Disculpa, no estoy seguro si entendí bien." ¿Podrías reformular la pregunta?"
+    Si tras confirmar, sigues sin tener seguridad, responde: "Lo siento, no puedo responderte con certeza, aún estoy aprendiendo." 
+
     [Ejemplo]
-    - Para los aparatos que si estén incluidos en las coberturas: 
-        Pregunta: "¿Está la lavadora incluida?" Respuesta: La lavadora está incluida en las coberturas x e y. 
-    Debes registrarte en área al cliente como...
+    - Pregunta: "¿Está la lavadora incluida?"
+      Respuesta: La lavadora está incluida en las coberturas x e y. Por favor, regístrate en el área de clientes
+      para mas detalles. 
     
-    - Para los aparatos que no estén incluidos en las coberturas: 
-        Pregunta: "¿Está la chimenea incluida?" Respuesta: Lo sentimos mucho, de momento la chimenea no está incluida 
+    - Pregunta: "¿Qué electrodomésticos incluye x cobertura?" 
+      Respuesta: Enumera los electrodomésticos incluidos en la cobertura de forma clara.
+
+    - Pregunta: "¿Está la chimenea incluida?"
+      Respuesta: Lo siento, de momento la chimenea no está incluida en nuestros servicios.
     
-    Pregunta:"¿Qué electromésticos me incluye x cobertura?" Para responder haz una enumeración de los electrodomesticos que incluye la cobertura x
+   
     
     [Salida]
     Respuesta: 
@@ -90,6 +116,8 @@ def create_prompt()->PromptTemplate:
     """
     prompt = PromptTemplate(template=template, input_variables=['question'])
     return prompt
+
+
 
 # Cargar el archivo PDF y dividir el texto
 def process_pdf(file_path)->List[Document]:
@@ -104,6 +132,7 @@ def process_pdf(file_path)->List[Document]:
 @app.route('/', methods=['GET', 'POST'])
 def upload():
     return render_template('index.html')
+    
 
 
 @app.route('/get-answer', methods=['POST'])
@@ -111,11 +140,26 @@ def get_answer():
     if 'question' not in request.form:
         return jsonify({'error': 'Solicitud inválida.'}), 400
 
-    question = request.form['question']
+    question = request.form['question'].strip()
+
+    logging.info(f"Pregunta recibida: {question}")
+    #Validacion de la longitud de la pregunta
+    max_length = 300
+    if len(question) > max_length:
+        return jsonify({'answer': f'La pregunta es demasiado larga. Por favor intenta hacerla más corta (máximo {max_length} caracteres).'}), 400
+    
     pdf_path = 'pdfs/CoberturasdeFacilita.pdf'  # Ruta del archivo PDF en tu proyecto
 
-    llm, embeddings = setup_llm_embeddings()
+    #Si la pregunta es una de las predefinidas, devolvemos respuesta fija
+    if question in quick_reply_answers:
+        answer = quick_reply_answers[question]
+        logging.info(f"Respuesta fija devuelta: {answer}")
+        return jsonify({'answer': answer})
+    
+
     prompt = create_prompt()
+    #Configuracion de la memoria para el historial de conversacion 
+    memory = ConversationBufferMemory(memory_key="chat_history", return_messages = True, max_context_messages = 10)
 
     documents = process_pdf(pdf_path)
     
@@ -127,7 +171,8 @@ def get_answer():
         vectorstore.as_retriever(search_kwargs={'k': 1}),
         condense_question_prompt=prompt,
         return_source_documents=False,
-        verbose=True,
+        memory = memory,
+        verbose=False, #true -> muestra en consola, false -> no muestra en consola
         combine_docs_chain_kwargs={'prompt': prompt, 'document_variable_name': 'context'}
     )
 
@@ -137,12 +182,19 @@ def get_answer():
 
 
 # Función para hacer una pregunta
-def ask_question(qa:ConversationalRetrievalChain, query:str, chat_history=[])->str:
+def ask_question(qa: ConversationalRetrievalChain, query: str) -> str:
+    try:
+        input = {"question": query}
+        result: dict = qa.invoke(input)
+        answer = result.get("answer", "No se obtuvo una respuesta.")
+
+        logging.info(f"Respuesta generada: {answer}")
    
-    input = {"question": query, "chat_history": chat_history}
-    result:dict = qa.invoke(input)
-    print('Result', result)
-    answer = result["answer"]
+    except Exception as e:
+        # Imprimir el error en el log de la aplicación para su seguimiento
+        logging.error(f"Error al obtener la respuesta: {e}")
+        # Mensaje de error amigable para el usuario
+        answer = "Lo siento, hubo un problema al procesar tu pregunta. Inténtalo de nuevo más tarde."
     
     return answer
 

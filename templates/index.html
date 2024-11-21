@@ -41,6 +41,11 @@
                         <textarea id="question" name="question" class="question-box" placeholder="Escribe tu pregunta aquí..." required></textarea>
                         <button type="submit" class="btn-send" id="send-button"><i class="fa fa-paper-plane"></i></button>
                     </form>
+                    <div class="quick-replies">
+                        <button class="quick-reply" data-message="¿Cuáles son los electrodomésticos cubiertos?">¿Cuáles son los electrodomésticos cubiertos?</button>
+                        <button class="quick-reply" data-message="¿Cómo puedo solicitar una reparación?">¿Cómo puedo solicitar una reparación?</button>
+                        <button class="quick-reply" data-message="¿Cuánto tiempo tarda una reparación?">¿Cuánto tiempo tarda una reparación?</button>
+                    </div> 
                 </div>
             </div>
             <div class="error-message" id="error-message" style="display:none;">
@@ -208,31 +213,22 @@
             initialMessage.textContent = 'Hola! Soy tu asistente virtual de Facilita. ¿En qué puedo ayudarte hoy?';
             chatLog.appendChild(initialMessage);
             
-            
-            sendButton.addEventListener('click', (e) => {
-                e.preventDefault();
-    
-                const question = questionInput.value;
-    
-    
-                if (!question) {
-                    errorMessage.style.display = 'block';
-                    errorText.textContent = 'Por favor, completa todos los campos.';
-                    return;
-                }
-    
-                errorMessage.style.display = 'none';
-    
+                 // Funcionalidad para los botones de respuestas rápidas
+        document.querySelectorAll('.quick-reply').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const question = e.target.getAttribute('data-message');
+                
+                // Crear y mostrar el mensaje del usuario en el chat log
                 const userMessage = document.createElement('li');
                 userMessage.classList.add('user-message');
                 userMessage.textContent = question;
                 chatLog.appendChild(userMessage);
                 scrollToBottom();
-    
+
+                // Enviar la pregunta directamente al servidor
                 const formData = new FormData();
                 formData.append('question', question);
-            
-    
+
                 fetch('/get-answer', {
                     method: 'POST',
                     body: formData
@@ -256,6 +252,103 @@
                     errorText.textContent = 'Error al obtener la respuesta.';
                 });
             });
+        });
+
+        function scrollToBottom() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+    
+
+        function sendMessage(){
+            
+            const question = questionInput.value;
+            
+            if (!question) {
+                    errorMessage.style.display = 'block';
+                    errorText.textContent = 'Por favor, completa todos los campos.';
+                    return;
+                }
+    
+            errorMessage.style.display = 'none';
+           
+
+            //Crear y mostrar el mensaje del usuario en el chat log
+            const userMessage = document.createElement('li');
+            userMessage.classList.add('user-message');
+            userMessage.textContent = question;
+            chatLog.appendChild(userMessage);
+            scrollToBottom();
+            
+            //Crear un mensaje temporal "Cargando.. " con el circulo animado
+            const loadingMessage = document.createElement('li');
+            loadingMessage.classList.add('model-message', 'loading-message');
+
+            //Crear el circulo animado
+            const loadingCircle = document.createElement('div');
+            loadingCircle.classList.add('loading-circle');
+            
+            //Añadir el circulo animado y el texto "Cargando..." al mensaje
+            loadingMessage.appendChild(loadingCircle);
+            loadingMessage.appendChild(document.createTextNode('Cargando...'));
+
+            chatLog.appendChild(loadingMessage);
+            scrollToBottom();
+
+
+            const formData = new FormData();
+            formData.append('question', question);
+            
+    
+            fetch('/get-answer', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                   //Eliminar el mensaje temporal "Cargando.."
+                   chatLog.removeChild(loadingMessage);
+
+                   //Crear y añadir el mensaje de respuesta con estilo normal
+                   const modelMessage = document.createElement('li');
+                   modelMessage.classList.add('model-message');
+                   modelMessage.textContent = data.answer || 'Lo siento, hubo un problema con la respuesta. '
+                   chatLog.appendChild(modelMessage);
+                   scrollToBottom();
+                    
+                })
+                .catch(error => {
+                    // Eliminar el mensaje temporal "Cargando..." y mostrar un mensaje de error
+                    chatLog.removeChild(loadingMessage);
+                    const errorMessageText = document.createElement('li');
+                    errorMessageText.classList.add('model-message');
+                    errorMessageText.textContent = 'Error al obtener la respuesta. Por favor, inténtalo de nuevo.';
+                    chatLog.appendChild(errorMessageText);
+                    console.error('Error:', error);
+                    errorMessage.style.display = 'block';
+                    errorText.textContent = 'Error al obtener la respuesta.';
+                    scrollToBottom();
+                });
+
+                //Para limpiar el area de texto
+                questionInput.value = ''; 
+        }
+
+        //Evento de clic para el boton enviar
+        sendButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendMessage();
+        });
+
+        //Evento de presionar Enter en el area de texto
+        questionInput.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter'){
+                e.preventDefault();
+                sendMessage();
+            }
+        })
+            
 
             function scrollToBottom() {
                 const chatBox = document.getElementById('chat-box');
